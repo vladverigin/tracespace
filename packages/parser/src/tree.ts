@@ -192,7 +192,7 @@ export interface Root extends BaseParent {
   /** Node type */
   type: typeof ROOT
   /** The parsed file's type (Gerber or NC drill) */
-  filetype: Types.Filetype
+  filetype: Types.Filetype|undefined
 
   /** Parse results */
   children: ChildNode[]

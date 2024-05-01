@@ -69,9 +69,9 @@ export function createParser(): Parser {
   }
 
   function result(): GerberTree {
-    if (filetype === undefined) {
-      throw new Error('File type not recognized')
-    }
+    // if (filetype === undefined) {
+    //   throw new Error('File type not recognized')
+    // }
 
     return {type: ROOT, filetype, children}
   }

@@ -7,3 +7,10 @@ coverage
 *.tgz
 .vscode
 .DS_Store
+.idea/vcs.xml
+.idea/tracespace.iml
+.idea/php.xml
+.idea/modules.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/codeStyles/Project.xml
+.idea/codeStyles/codeStyleConfig.xml

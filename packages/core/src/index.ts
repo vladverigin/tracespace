@@ -23,6 +23,18 @@ import type {Side, SideLayers} from './sort-layers'
 
 export {stringifySvg} from './stringify-svg'
 
+const defaultOptions: RenderOptions = {
+  color: {
+    cf:"#cc9933",
+    cu:"#cccccc",
+    fr4:"#666666",
+    out:"#000000",
+    sm:"#004200bf",
+    sp:"#999999",
+    ss:"#ffffff",
+  },
+}
+
 export interface Layer {
   id: string
   filename: string
@@ -30,8 +42,20 @@ export interface Layer {
   side: GerberSide | undefined
 }
 
+export interface ReadyLayer extends Layer {
+  color: string
+  path: string
+  gerber:string
+}
+
+export interface RenderOptions {
+  color: {
+    [key: string]: string
+  }
+}
+
 export interface ReadResult {
-  layers: Layer[]
+  layers: Layer[]|ReadyLayer[]
   parseTreesById: Record<string, GerberTree>
 }
 
@@ -116,8 +140,55 @@ export function renderLayers(plotResult: PlotResult): RenderLayersResult {
   return {layers, rendersById, boardShapeRender}
 }
 
+export function pcbStackUp(notParsedLayers: ReadyLayer[],options:RenderOptions) {
+  const { color } = options;
+
+  const parsedLayers = notParsedLayers.map((el:ReadyLayer)=>{
+    const parseTree = parser.parse(el.gerber)
+    return {
+      ...el,
+      parseTree
+    }
+  });
+
+  const parseTreesById: Record<string, GerberTree> = {}
+
+  for (const {id, filename, parseTree} of parsedLayers) {
+    parseTreesById[id] = parseTree
+  }
+
+  const readResults:ReadResult = {
+    layers: parsedLayers,
+    parseTreesById
+  };
+
+  const plotResults = plot(readResults);
+  const renderLayersResult = renderLayers(plotResults);
+  const layers = renderLayersResult.layers.map((el:Layer) => {
+    const rendered = renderLayersResult.rendersById[el.id];
+    const color:string|undefined = notParsedLayers.find((el:ReadyLayer) => el.id === el.id)?.color;
+    return {
+      ...el,
+      ...rendered,
+      color,
+    }
+  });
+  const {top, bottom} = renderBoard(renderLayersResult);
+  const fragments = renderFragments(plotResults);
+
+  return {
+    stringifySvg,
+    top,
+    bottom,
+    color: color ?? defaultOptions.color,
+    layers,
+    fragments
+  }
+}
+
 export function renderBoard(
-  renderLayersResult: RenderLayersResult
+  renderLayersResult: RenderLayersResult,
+  colors: Record<string, string> = defaultOptions.color
 ): RenderBoardResult {
   const {layers, rendersById, boardShapeRender} = renderLayersResult
   const {viewBox, path: shapeRender} = boardShapeRender
@@ -155,16 +226,18 @@ export function renderBoard(
         ...renderer.BASE_SVG_PROPS,
         ...renderer.BASE_IMAGE_PROPS,
         viewBox: `${x} ${y} ${width} ${height}`,
+        width,
+        height,
       },
       [
         s('defs', [
           s('mask', {id: drillMaskId}, [
-            s('rect', {x, y, width, height, fill: '#fff'}),
-            s('g', {color: '#000'}, drillLayers.flatMap(getRenderChildren)),
+            s('rect', {x, y, width, height, fill: colors.ss}),
+            s('g', {color: colors.out}, drillLayers.flatMap(getRenderChildren)),
           ]),
           s('mask', {id: resistMaskId}, [
-            s('rect', {x, y, width, height, fill: '#fff'}),
-            s('g', {color: '#000'}, resistLayers.flatMap(getRenderChildren)),
+            s('rect', {x, y, width, height, fill: colors.ss}),
+            s('g', {color: colors.out}, resistLayers.flatMap(getRenderChildren)),
           ]),
           shapeRender === undefined
             ? undefined
@@ -172,14 +245,14 @@ export function renderBoard(
         ]),
         s('g', {transform, 'clip-path': clipPath}, [
           s('g', {mask: `url(#${drillMaskId})`}, [
-            s('rect', {fill: '#666', x, y, width, height}),
-            s('g', {color: '#c93'}, copperLayers.flatMap(getRenderChildren)),
+            s('rect', {fill: colors.fr4, x, y, width, height}),
+            s('g', {color: colors.cf}, copperLayers.flatMap(getRenderChildren)),
           ]),
           s('g', {mask: `url(#${resistMaskId})`}, [
-            s('rect', {fill: '#004200', opacity: '0.8', x, y, width, height}),
-            s('g', {color: '#fff'}, silkLayers.flatMap(getRenderChildren)),
+            s('rect', {fill: colors.sm, opacity: '0.75', x, y, width, height}),
+            s('g', {color: colors.ss}, silkLayers.flatMap(getRenderChildren)),
           ]),
-          s('g', {color: '#999'}, pasteLayers.flatMap(getRenderChildren)),
+          s('g', {color: colors.sp}, pasteLayers.flatMap(getRenderChildren)),
         ]),
       ]
     )
