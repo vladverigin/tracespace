@@ -226,8 +226,8 @@ export function renderBoard(
         ...renderer.BASE_SVG_PROPS,
         ...renderer.BASE_IMAGE_PROPS,
         viewBox: `${x} ${y} ${width} ${height}`,
-        width,
-        height,
+        // width,
+        // height,
       },
       [
         s('defs', [

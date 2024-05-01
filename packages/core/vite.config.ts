@@ -16,16 +16,16 @@ export default defineConfig({
     rollupOptions: {
       output: [
         {
-          dir: "dist/browser",
+          dir: "../../dist",
           name: "trace-core",
           plugins: [],
         },
-        {
-          dir: "dist/esm",
-          format: "esm",
-          entryFileNames: "index.js",
-          sourcemap: true,
-        },
+        // {
+        //   dir: "dist/esm",
+        //   format: "esm",
+        //   entryFileNames: "index.js",
+        //   sourcemap: true,
+        // },
       ],
       external: ["@uppy/core"],
     },

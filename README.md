@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>tracespace</h1>
+  <h1>tracespace Fork</h1>
   <p>Printed circuit board visualization tools for JavaScript</p>
   <p>
     <a title="CI Status" href="https://github.com/tracespace/tracespace/actions"><img src="https://img.shields.io/github/actions/workflow/status/tracespace/tracespace/ci.yml?branch=v5&style=flat-square"></a>
@@ -12,15 +12,20 @@
   </p>
 </div>
 
-## Work in progress
-
-**Welcome to tracespace v5!** This version of tracespace is still in development, so documentation may not be accurate and package APIs may change without warning.
-
-See the [main branch][] for the current v4 release.
-
 [main branch]: https://github.com/tracespace/tracespace/tree/main
 
-## Packages
+## Fork related
+The main goal is to create code to replace the old pcb-stackup 4 package release due to a problem with outline rendering
+
+## To build instructions
+We only use the core package([@tracespace/core][]  ) with a set of dependencies [@tracespace/plotter][], [@tracespace/parser][], [@tracespace/renderer][], etc.
+- Install pnpm from [pnpm site]
+- Install packages ```pnpm install```
+- Run ```npm run build:packages``` in root dir
+- Results will be found in core package dist dir ```.\dist```
+
+
+## Original Packages
 
 | package                                             |                                 | description                                                                                 |
 | --------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------- |
@@ -58,60 +63,6 @@ See the [main branch][] for the current v4 release.
 [renderer version]: https://img.shields.io/npm/v/@tracespace/renderer/next?style=flat-square
 [xml-id version]: https://img.shields.io/npm/v/@tracespace/xml-id/next?style=flat-square
 
-## Roadmap
-
-[I][] work on tracespace in my free time, so this roadmap should be taken with several grains of salt. While the new version is in development, pre-production versions of libraries will be periodically released under the `next` tag in npm.
-
-- [x] New build tools based on [vite][] and [TypeScript][]
-- [x] Create [@tracespace/parser][] package to generate [unist][] abstract syntax trees
-  - Replaces gerber-parser from tracespace v4
-- [x] Create [@tracespace/plotter][] package convert ASTs to image trees
-  - Replaces gerber-plotter from tracespace v4
-- [x] Create [@tracespace/renderer][] package convert image trees to [hast][] SVG trees
-  - Replaces gerber-to-svg from tracespace v4
-- [x] Rename whats-that-gerber to [@tracespace/identify-layers][]
-- [x] Create [@tracespace/core][] package to hold the core render pipeline
-  - Replaces pcb-stackup and pcb-stackup-core from tracespace v4
-- [x] Rewrite [@tracespace/cli] to use new render pipeline
-- [ ] Rewrite <https://tracespace.io/view/> to use new render pipeline
-- [ ] Build documentation website for tracespace libraries
-- [ ] Ensure all important Gerber / drill features are supported
-- [ ] Release tracespace v5
-
-[i]: https://github.com/mcous
-[vite]: https://vitejs.dev/
-[typescript]: https://www.typescriptlang.org/
-[unist]: https://unifiedjs.com/
-[hast]: https://github.com/syntax-tree/hast
-
-### Issues to fix
-
-The v5 release will attempt to fix / address the following open issues:
-
-- [x] Handle disagreements between filename type vs parsed type ([#49][])
-- [x] Reduce number of `<use>` tags in SVG output ([#80][])
-- [x] Arc plotting should be more lenient ([#82][])
-- [x] Operation with non-existent tool should no-op with a warning ([#83][])
-- [x] Fails to detect units if format spec combined with units spec ([#234][])
-- [x] clipPath for outline breaks in Firefox if outline has clear layers ([#302][])
-- [x] gerberParser.parseSync clobbers filetype option ([#306][])
-- [x] Gerber file starting with newline incorrectly identified as drill file ([#307][])
-- [x] Generate consistent document size for all layers. ([#324][])
-- [ ] G93 code in drill file rendered as drilled hole ([#353][])
-- [x] Allow soldermask layer to cover vias in board render ([#399][])
-
-[#49]: https://github.com/tracespace/tracespace/issues/49
-[#80]: https://github.com/tracespace/tracespace/issues/80
-[#82]: https://github.com/tracespace/tracespace/issues/82
-[#83]: https://github.com/tracespace/tracespace/issues/83
-[#234]: https://github.com/tracespace/tracespace/issues/234
-[#302]: https://github.com/tracespace/tracespace/issues/302
-[#306]: https://github.com/tracespace/tracespace/issues/306
-[#307]: https://github.com/tracespace/tracespace/issues/307
-[#324]: https://github.com/tracespace/tracespace/issues/324
-[#353]: https://github.com/tracespace/tracespace/issues/353
-[#399]: https://github.com/tracespace/tracespace/issues/399
-
 ## tracespace in the wild
 
 - [tracespace.io/view][tracespace-view] - A Gerber viewer powered by the tracespace libraries
@@ -121,3 +72,4 @@ The v5 release will attempt to fix / address the following open issues:
 [tracespace-view]: https://tracespace.io/view
 [kitspace]: https://kitspace.org
 [openhardware]: https://www.openhardware.io
+[pnpm site]: https://pnpm.io/installation
