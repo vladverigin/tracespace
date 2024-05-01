@@ -36,12 +36,6 @@ export interface ReadyLayer extends Layer {
   gerber:string
 }
 
-export interface RenderOptions {
-  color: {
-    [key: string]: string
-  }
-}
-
 export interface ReadResult {
   layers: Layer[]|ReadyLayer[]
   parseTreesById: Record<string, GerberTree>

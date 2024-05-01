@@ -3,8 +3,7 @@ import * as core from '@tracespace/core'
 
 import type {GerberTree} from '@tracespace/parser'
 
-import type {GerberSide, GerberType} from '@tracespace/identify-layers'
-import type {ReadResult} from '@tracespace/core'
+import type {ReadResult,ReadyLayer,Layer} from '@tracespace/core'
 
 export interface RenderOptions {
   color: {
@@ -12,33 +11,21 @@ export interface RenderOptions {
   }
 }
 
-export interface Layer {
-  id: string
-  filename: string
-  type: GerberType | undefined
-  side: GerberSide | undefined
-}
-
-export interface ReadyLayer extends Layer {
-  color: string
-  path: string
-  gerber:string
-}
-
 const defaultOptions: RenderOptions = {
   color: {
-    cf:"#cc9933",
-    cu:"#cccccc",
-    fr4:"#666666",
-    out:"#000000",
+    cf:"#c93",
+    cu:"#ccc",
+    fr4:"#666",
+    out:"#000",
     sm:"#004200bf",
-    sp:"#999999",
-    ss:"#ffffff",
+    sp:"#999",
+    ss:"#fff",
   },
 }
 
 export function pcbStackUp(notParsedLayers: ReadyLayer[],options:RenderOptions) {
   const { color } = options;
+  const usedColors = color ?? defaultOptions.color;
 
   const parsedLayers = notParsedLayers.map((el:ReadyLayer)=>{
     const parseTree = parser.parse(el.gerber)
@@ -70,7 +57,7 @@ export function pcbStackUp(notParsedLayers: ReadyLayer[],options:RenderOptions) 
       color,
     }
   });
-  const {top, bottom} = core.renderBoard(renderLayersResult,color ?? defaultOptions.color);
+  const {top, bottom} = core.renderBoard(renderLayersResult,usedColors);
   const fragments = core.renderFragments(plotResults);
 
   return {
@@ -78,7 +65,7 @@ export function pcbStackUp(notParsedLayers: ReadyLayer[],options:RenderOptions) 
     stringifySvg:core.stringifySvg,
     top,
     bottom,
-    color: color ?? defaultOptions.color,
+    color: usedColors,
     layers,
     fragments
   }
