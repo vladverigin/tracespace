@@ -20,25 +20,26 @@ The main goal is to create code to replace the old pcb-stackup 4 package release
 ## To build instructions
 We only use the core package([@tracespace/core][]  ) with a set of dependencies [@tracespace/plotter][], [@tracespace/parser][], [@tracespace/renderer][], etc.
 - Install pnpm from [pnpm site]
+- Run ```corepack enable```
 - Install packages ```pnpm install```
-- Run ```npm run build:packages``` in root dir
+- Run ```npm run build``` in root dir
 - Results will be found in core package dist dir ```.\dist```
 
 
 ## Original Packages
 
-| package                                             |                                 | description                                                                                 |
-| --------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------- |
-| [![cli version][]][cli npm]                         | [@tracespace/cli][]             | Use Gerber/drill files to create an SVG render of a finished PCB from the command line.     |
-| [![core version][]][core npm]                       | [@tracespace/core][]            | Use Gerber/drill files to create an SVG render of a finished PCB in Node.js or the browser. |
-| [![fixtures version][]][fixtures npm]               | [@tracespace/fixtures][]        | Sample Gerber/drill files for use as test fixtures.                                         |
+| package              |                                 | description                                                                                 |
+|----------------------|---------------------------------|---------------------------------------------------------------------------------------------|
+|                      | [@tracespace/stackup][]         | Use Gerber/drill files to create an SVG render of a finished PCB in the browser only.       |
+| [![core version][]][core npm] | [@tracespace/core][]            | Use Gerber/drill files to create an SVG render of a finished PCB in Node.js or the browser. |
+| [![fixtures version][]][fixtures npm] | [@tracespace/fixtures][]        | Sample Gerber/drill files for use as test fixtures.                                         |
 | [![identify-layers version][]][identify-layers npm] | [@tracespace/identify-layers][] | Try to guess Gerber files' layer types based on filenames.                                  |
-| [![parser version][]][parser npm]                   | [@tracespace/parser][]          | Parse Gerber/drill files into abstract syntax trees.                                        |
-| [![plotter version][]][plotter npm]                 | [@tracespace/plotter][]         | Plot @tracespace/parser ASTs into image trees.                                              |
-| [![renderer version][]][renderer npm]               | [@tracespace/renderer][]        | Render @tracespace/plotter image trees as SVGs                                              |
-| [![xml-id version][]][xml-id npm]                   | [@tracespace/xml-id][]          | XML element ID generation and sanitation utilities.                                         |
+| [![parser version][]][parser npm] | [@tracespace/parser][]          | Parse Gerber/drill files into abstract syntax trees.                                        |
+| [![plotter version][]][plotter npm] | [@tracespace/plotter][]         | Plot @tracespace/parser ASTs into image trees.                                              |
+| [![renderer version][]][renderer npm] | [@tracespace/renderer][]        | Render @tracespace/plotter image trees as SVGs                                              |
+| [![xml-id version][]][xml-id npm] | [@tracespace/xml-id][]          | XML element ID generation and sanitation utilities.                                         |
 
-[@tracespace/cli]: ./packages/cli
+[@tracespace/stackup]: ./packages/stackup
 [@tracespace/core]: ./packages/parser
 [@tracespace/fixtures]: ./packages/fixtures
 [@tracespace/identify-layers]: ./packages/identify-layers

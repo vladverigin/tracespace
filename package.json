@@ -2,7 +2,7 @@
   "name": "tracespace",
   "private": true,
   "scripts": {
-    "build:packages": "pnpm -r --aggregate-output build",
+    "build": "pnpm -r --aggregate-output build",
     "clean": "tsc --build --clean"
   },
   "type": "module",
@@ -11,7 +11,7 @@
   },
   "packageManager": "pnpm@7.25.0",
   "dependencies": {
-    "@tracespace/cli": "workspace:*",
+    "@tracespace/stackup": "workspace:*",
     "@tracespace/core": "workspace:*",
     "@tracespace/fixtures": "workspace:*",
     "@tracespace/identify-layers": "workspace:*",

@@ -23,18 +23,6 @@ import type {Side, SideLayers} from './sort-layers'
 
 export {stringifySvg} from './stringify-svg'
 
-const defaultOptions: RenderOptions = {
-  color: {
-    cf:"#cc9933",
-    cu:"#cccccc",
-    fr4:"#666666",
-    out:"#000000",
-    sm:"#004200bf",
-    sp:"#999999",
-    ss:"#ffffff",
-  },
-}
-
 export interface Layer {
   id: string
   filename: string
@@ -140,55 +128,9 @@ export function renderLayers(plotResult: PlotResult): RenderLayersResult {
   return {layers, rendersById, boardShapeRender}
 }
 
-export function pcbStackUp(notParsedLayers: ReadyLayer[],options:RenderOptions) {
-  const { color } = options;
-
-  const parsedLayers = notParsedLayers.map((el:ReadyLayer)=>{
-    const parseTree = parser.parse(el.gerber)
-    return {
-      ...el,
-      parseTree
-    }
-  });
-
-  const parseTreesById: Record<string, GerberTree> = {}
-
-  for (const {id, filename, parseTree} of parsedLayers) {
-    parseTreesById[id] = parseTree
-  }
-
-  const readResults:ReadResult = {
-    layers: parsedLayers,
-    parseTreesById
-  };
-
-  const plotResults = plot(readResults);
-  const renderLayersResult = renderLayers(plotResults);
-  const layers = renderLayersResult.layers.map((el:Layer) => {
-    const rendered = renderLayersResult.rendersById[el.id];
-    const color:string|undefined = notParsedLayers.find((el:ReadyLayer) => el.id === el.id)?.color;
-    return {
-      ...el,
-      ...rendered,
-      color,
-    }
-  });
-  const {top, bottom} = renderBoard(renderLayersResult);
-  const fragments = renderFragments(plotResults);
-
-  return {
-    stringifySvg,
-    top,
-    bottom,
-    color: color ?? defaultOptions.color,
-    layers,
-    fragments
-  }
-}
-
 export function renderBoard(
   renderLayersResult: RenderLayersResult,
-  colors: Record<string, string> = defaultOptions.color
+  colors: Record<string, string>
 ): RenderBoardResult {
   const {layers, rendersById, boardShapeRender} = renderLayersResult
   const {viewBox, path: shapeRender} = boardShapeRender
